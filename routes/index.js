@@ -1,12 +1,12 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.json({ message: "Hello World"});
+/* GET Healt check. */
+router.get('/api/chat/', function(req, res, next) {
+  res.json({ message: "Chat-Backend Running"});
 });
 
-router.get("/sendMsg", async function(req, res, next) {
+router.get("/api/chat/sendMsg", async function(req, res, next) {
   if (!req.query.message) {
     res.status = 500;
     res.json({ error: "Missing 'message' query parameter" });

@@ -31,3 +31,7 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+
+app.listen(3003, () => {
+  console.log("chat-backend listening on 3003");
+});
