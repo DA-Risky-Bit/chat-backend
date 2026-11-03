@@ -15,6 +15,18 @@ router.get("/api/chat/sendMsg", async function(req, res, next) {
 
   const message = req.query.message;
 
+  const history = req.query.history ? JSON.parse(req.query.history) : [];
+
+  console.log("Received message:", message);
+  console.log("Received history:", history);
+
+  var constHistory = history.map(([role, content]) => ({
+    role: role,
+    content: content
+  }));
+
+  console.log("Constructed history for Ollama API:", constHistory);
+
   const ollamaResponse = await fetch("http://ollama:11434/api/chat", {
     method: "POST",
     headers: {
@@ -25,6 +37,7 @@ router.get("/api/chat/sendMsg", async function(req, res, next) {
       stream: false,
       messages: [
         { role: "system", content: "You are a helpful assistant." },
+        ...constHistory,
         { role: "user", content: message }
       ]
     }),
