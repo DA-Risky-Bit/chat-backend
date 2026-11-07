@@ -1,11 +1,22 @@
 var express = require('express');
 var router = express.Router();
 
+var backendHistory = new Map();
+
 /* GET Healt check. */
 router.get('/api/chat/', function(req, res, next) {
   res.json({ message: "Chat-Backend Running"});
 });
 
+/*
+
+API request handler for handling Local LLM Messaging.
+
+--  Inputs as URL Params
+#   Message
+
+History handling through 'backendHistory' variable
+*/
 router.get("/api/chat/sendMsg", async function(req, res, next) {
   if (!req.query.message) {
     res.status = 500;
@@ -15,15 +26,18 @@ router.get("/api/chat/sendMsg", async function(req, res, next) {
 
   const message = req.query.message;
 
-  const history = req.query.history ? JSON.parse(req.query.history) : [];
+  const history = Array.from(backendHistory.entries()).map(([role, content]) => [role.split(":")[0], content]);
 
   console.log("Received message:", message);
-  console.log("Received history:", history);
+  console.log("Saved history:", history);
 
+  // Constructed History for AI Messaging
   var constHistory = history.map(([role, content]) => ({
     role: role,
     content: content
   }));
+
+  backendHistory.set(`user:` + Date.now(), message);
 
   console.log("Constructed history for Ollama API:", constHistory);
 
@@ -44,6 +58,10 @@ router.get("/api/chat/sendMsg", async function(req, res, next) {
   });
 
   const ollamaData = await ollamaResponse.json();
+
+  backendHistory.set(`assistant:` + Date.now(), ollamaData.message.content);
+
+  console.log(backendHistory);
 
   res.json({ message: "Testing API Endpoint for User to AI Interaction", ollamaData });
 });
