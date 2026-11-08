@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+const fs = require('node:fs');
+const path = require('path');
 
 var backendHistory = new Map();
 
@@ -17,10 +19,6 @@ API request handler for handling Local LLM Messaging.
 
 History handling through 'backendHistory' variable
 */
-
-router.post("/api/chat/postTest", async function (req, res, next) {
-  console.log("request body: " + req.body.json());
-});
 
 router.get("/api/chat/sendMsg", async function (req, res, next) {
   if (!req.query.message) {
@@ -42,6 +40,16 @@ router.get("/api/chat/sendMsg", async function (req, res, next) {
     content: content
   }));
 
+  var systemPrompt = ""
+
+  try {
+    const promptPath = path.join(__dirname, '../prompts/prompt.txt');
+    systemPrompt = fs.readFileSync(promptPath, 'utf8');
+    console.log(systemPrompt);
+  } catch (err) {
+    console.error(err);
+  }
+
   backendHistory.set(`user:` + Date.now(), message);
 
   console.log("Constructed history for Ollama API:", constHistory);
@@ -55,7 +63,7 @@ router.get("/api/chat/sendMsg", async function (req, res, next) {
       model: "qwen3:4b",
       stream: false,
       messages: [
-        { role: "system", content: "You are a helpful assistant." },
+        { role: "system", content: systemPrompt },
         ...constHistory,
         { role: "user", content: message }
       ]
