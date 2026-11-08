@@ -4,8 +4,8 @@ var router = express.Router();
 var backendHistory = new Map();
 
 /* GET Healt check. */
-router.get('/api/chat/', function(req, res, next) {
-  res.json({ message: "Chat-Backend Running"});
+router.get('/api/chat/', function (req, res, next) {
+  res.json({ message: "Chat-Backend Running" });
 });
 
 /*
@@ -17,7 +17,12 @@ API request handler for handling Local LLM Messaging.
 
 History handling through 'backendHistory' variable
 */
-router.get("/api/chat/sendMsg", async function(req, res, next) {
+
+router.post("/api/chat/postTest", async function (req, res, next) {
+  console.log("request body: " + req.body.json());
+});
+
+router.get("/api/chat/sendMsg", async function (req, res, next) {
   if (!req.query.message) {
     res.status = 500;
     res.json({ error: "Missing 'message' query parameter" });
@@ -64,6 +69,18 @@ router.get("/api/chat/sendMsg", async function(req, res, next) {
   console.log(backendHistory);
 
   res.json({ message: "Testing API Endpoint for User to AI Interaction", ollamaData });
+});
+
+router.get("/api/chat/history", function (req, res, next) {
+  console.log("HISTORY: " + backendHistory)
+  console.log(Array.from(backendHistory.entries()))
+
+  if (Array.from(backendHistory.entries()).length > 0) {
+    res.json(Array.from(backendHistory.entries()))
+  } else {
+    res.status(404)
+    res.json("No History present")
+  }
 });
 
 module.exports = router;
