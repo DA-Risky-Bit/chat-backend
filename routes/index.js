@@ -36,7 +36,7 @@ router.get("/api/chat/sendMsg", async function (req, res, next) {
 
   // Constructed History for AI Messaging
   var constHistory = history.map(([role, content]) => ({
-    role: role,
+    role: role === "emil" ? "assistant" : "user",
     content: content
   }));
 
@@ -50,7 +50,7 @@ router.get("/api/chat/sendMsg", async function (req, res, next) {
     console.error(err);
   }
 
-  backendHistory.set(`user:` + Date.now(), message);
+  backendHistory.set(`you:` + Date.now(), message);
 
   console.log("Constructed history for Ollama API:", constHistory);
 
@@ -72,7 +72,7 @@ router.get("/api/chat/sendMsg", async function (req, res, next) {
 
   const ollamaData = await ollamaResponse.json();
 
-  backendHistory.set(`assistant:` + Date.now(), ollamaData.message.content);
+  backendHistory.set(`emil:` + Date.now(), ollamaData.message.content);
 
   console.log(backendHistory);
 
@@ -81,14 +81,20 @@ router.get("/api/chat/sendMsg", async function (req, res, next) {
 
 router.get("/api/chat/history", function (req, res, next) {
   console.log("HISTORY: " + backendHistory)
-  console.log(Array.from(backendHistory.entries()))
+  console.log(Array.from(backendHistory.entries()).length)
 
   if (Array.from(backendHistory.entries()).length > 0) {
     res.json(Array.from(backendHistory.entries()))
   } else {
     res.status(404)
-    res.json("No History present")
+    res.json("no history")
   }
+});
+
+router.delete("/api/chat/history", function (req, res, next) {
+  backendHistory = new Map();
+
+  res.json("history deleted");
 });
 
 module.exports = router;
