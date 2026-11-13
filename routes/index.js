@@ -1,4 +1,5 @@
 var express = require('express');
+const { timeStamp, time } = require('node:console');
 var router = express.Router();
 const fs = require('node:fs');
 const path = require('path');
@@ -91,7 +92,10 @@ router.get("/api/chat/history", function (req, res, next) {
   }
 });
 
-router.delete("/api/chat/history", function (req, res, next) {
+router.delete("/api/chat/history", async function (req, res, next) {
+  const logPath = path.join(__dirname, `../logs/log${Date.now()}.txt`);
+  fs.writeFileSync(logPath, JSON.stringify(Array.from(backendHistory), null, 2));
+
   backendHistory = new Map();
 
   res.json("history deleted");
