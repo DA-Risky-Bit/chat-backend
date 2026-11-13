@@ -6,6 +6,9 @@ const path = require('path');
 
 var backendHistory = new Map();
 
+// Debug for TOFT
+var thougts = new Map();
+
 /* GET Healt check. */
 router.get('/api/chat/', function (req, res, next) {
   res.json({ message: "Chat-Backend Running" });
@@ -74,6 +77,7 @@ router.get("/api/chat/sendMsg", async function (req, res, next) {
   const ollamaData = await ollamaResponse.json();
 
   backendHistory.set(`emil:` + Date.now(), ollamaData.message.content);
+  thougts.set(`${Date.now()}`, ollamaData.message.thinking);
 
   console.log(backendHistory);
 
@@ -94,9 +98,10 @@ router.get("/api/chat/history", function (req, res, next) {
 
 router.delete("/api/chat/history", async function (req, res, next) {
   const logPath = path.join(__dirname, `../logs/log${Date.now()}.txt`);
-  fs.writeFileSync(logPath, JSON.stringify(Array.from(backendHistory), null, 2));
+  fs.writeFileSync(logPath, JSON.stringify(Array.from(backendHistory), null, 2) + "\n\r Thoughts: \n\r" + JSON.stringify(Array.from(thougts), null, 2));
 
   backendHistory = new Map();
+  thougts = new Map();
 
   res.json("history deleted");
 });
