@@ -3,12 +3,17 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
     "express": "^4.22.3",
     "http-errors": "~1.6.3",
     "morgan": "^1.12.1"
+  },
+  "devDependencies": {
+    "oxlint": "^1.94.0"
   }
 }
