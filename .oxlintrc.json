@@ -1,0 +1,5 @@
+{
+  "extends": ["../config/oxlint.base.json"],
+  "plugins": ["typescript", "node", "import"],
+  "env": { "node": true }
+}
