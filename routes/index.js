@@ -106,4 +106,14 @@ router.delete("/api/chat/history", async function (req, res, next) {
   res.json("history deleted");
 });
 
+router.get("/api/chat/dms", function (req, res, next) {
+  const dms = [
+    { "name": "Thomas Berger", "status": "online" },
+    { "name": "Thomas Berger", "status": "online" },
+    { "name": "Thomas Berger", "status": "online" }
+  ];
+
+  res.json(dms);
+});
+
 module.exports = router;
