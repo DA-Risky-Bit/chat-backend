@@ -109,8 +109,8 @@ router.delete("/api/chat/history", async function (req, res, next) {
 router.get("/api/chat/dms", function (req, res, next) {
   const dms = [
     { "name": "Thomas Berger", "status": "online" },
-    { "name": "Thomas Berger", "status": "online" },
-    { "name": "Thomas Berger", "status": "online" }
+    { "name": "Sabine Gruber", "status": "online" },
+    { "name": "Maria Huber", "status": "online" }
   ];
 
   res.json(dms);
