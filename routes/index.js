@@ -77,7 +77,7 @@ router.post("/api/chat/sendMsg", async function (req, res, next) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: "qwen3:4b",
+      model: "rb_qwen",
       stream: false,
       messages: [
         { role: "system", content: systemPrompt },
