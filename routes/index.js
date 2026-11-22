@@ -6,6 +6,12 @@ const path = require('path');
 
 var backendHistory = new Map();
 
+const dms = [
+  { "id": 0, "name": "Thomas Berger", "desc": "IT-Security", "status": "online" },
+  { "id": 1, "name": "Sabine Gruber", "desc": "Personal", "status": "online" },
+  { "id": 2, "name": "Maria Huber", "desc": "PR", "status": "online" }
+];
+
 // Debug for TOFT
 var thougts = new Map();
 
@@ -84,7 +90,7 @@ router.get("/api/chat/sendMsg", async function (req, res, next) {
   res.json({ message: "Testing API Endpoint for User to AI Interaction", ollamaData });
 });
 
-router.get("/api/chat/history", function (req, res, next) {
+router.post("/api/chat/history", function (req, res, next) {
   console.log("HISTORY: " + backendHistory)
   console.log(Array.from(backendHistory.entries()).length)
 
@@ -106,14 +112,14 @@ router.delete("/api/chat/history", async function (req, res, next) {
   res.json("history deleted");
 });
 
-router.get("/api/chat/dms", function (req, res, next) {
-  const dms = [
-    { "name": "Thomas Berger", "status": "online" },
-    { "name": "Sabine Gruber", "status": "online" },
-    { "name": "Maria Huber", "status": "online" }
-  ];
-
+router.post("/api/chat/dms", function (req, res, next) {
   res.json(dms);
+});
+
+router.post("/api/chat/dms/:id", function (req, res, next) {
+  const id = req.params.id;
+
+  res.json(dms.at(id));
 });
 
 module.exports = router;
